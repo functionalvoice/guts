@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Functional Voice — Gut Health Mini-Course</title>
+<style>
+  :root{
+    --accent:#0ea5e9;          /* change this to your brand color */
+    --fg:#0f172a;              /* slate-900 */
+    --muted:#475569;           /* slate-600 */
+    --line:#e2e8f0;            /* slate-200 */
+    --surface:#f8fafc;         /* slate-50 */
+    --ok:#16a34a;              /* green-600 */
+    --warn:#dc2626;            /* red-600 */
+    --chip:#eef2ff;            /* indigo-50 */
+    --chip-text:#3730a3;       /* indigo-700 */
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:linear-gradient(180deg,#ffffff, #f6f9fc);
+    color:var(--fg); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
+  .wrap{max-width:840px; margin:24px auto; padding:16px}
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:0 20px 45px rgba(2,6,23,.06); padding:20px;
+  }
+  header{
+    display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px}
+  .dot{width:12px; height:12px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent)}
+  .brand h1{font-size:18px; margin:0; font-weight:800}
+  .meta{color:var(--muted); font-size:12px}
+  .progress{height:10px; background:var(--line); border-radius:999px; overflow:hidden; margin:12px 0}
+  .bar{height:100%; width:0%; background:linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #14b8a6)); transition:width .25s ease}
+  h2{font-size:22px; margin:12px 0 8px; line-height:1.25}
+  .goals{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .chip{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:6px 10px; border-radius:999px; background:var(--chip); color:var(--chip-text); border:1px solid #dbeafe}
+  .content p{margin:8px 0; color:var(--muted)}
+  .bullets{margin:6px 0 10px 18px}
+  .callout{
+    border:1px solid #bae6fd; background:#ecfeff; border-radius:12px; padding:12px; margin:8px 0;
+  }
+  .quiz h3{font-size:16px; margin:12px 0 8px}
+  .options{display:grid; gap:8px}
+  .opt{
+    border:1px solid var(--line); border-radius:12px; padding:10px; cursor:pointer; outline:none;
+    display:flex; align-items:center; gap:10px; background:#fff;
+  }
+  .opt[aria-checked="true"]{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent)}
+  .opt.correct{border-color:var(--ok); background:color-mix(in srgb, #fff 85%, var(--ok))}
+  .opt.incorrect{border-color:var(--warn); background:color-mix(in srgb, #fff 85%, var(--warn))}
+  .opt .bullet{width:20px; height:20px; border-radius:999px; border:2px solid var(--line); flex:0 0 auto}
+  .opt[aria-checked="true"] .bullet{border-color:var(--accent); box-shadow: inset 0 0 0 6px var(--accent)}
+  .feedback{font-size:13px; color:var(--muted); margin-top:6px}
+  .footer{display:flex; justify-content:space-between; gap:10px; margin-top:16px; flex-wrap:wrap}
+  button{
+    appearance:none; border:1px solid var(--line); background:#fff; color:var(--fg);
+    padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700;
+  }
+  .primary{background:var(--accent); color:#fff; border-color: color-mix(in srgb, var(--accent) 60%, #0000)}
+  button[disabled]{opacity:.6; cursor:not-allowed}
+  .small{font-size:12px; color:var(--muted)}
+  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:12px; padding:0 6px; border:1px solid var(--line); border-radius:6px; background:var(--surface)}
+  .disclaimer{
+    margin-top:14px; font-size:12px; color:#334155; background:#f1f5f9; border:1px solid var(--line); padding:12px; border-radius:12px;
+  }
+  /* visible focus */
+  :focus-visible{outline:3px solid color-mix(in srgb, var(--accent) 55%, #0000); outline-offset:2px; border-radius:10px}
+  /* mobile spacing */
+  @media (max-width:520px){
+    .wrap{padding:10px}
+    .card{padding:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="region" aria-label="Functional Voice Gut Health Course">
+    <header>
+      <div class="brand" aria-label="Brand">
+        <span class="dot" aria-hidden="true"></span>
+        <h1>Functional Voice — Gut Health Mini-Course</h1>
+      </div>
+      <div class="meta" id="scoreLabel">Score: 0 / 4</div>
+    </header>
+
+    <div class="progress" aria-label="Progress"><div class="bar" id="bar"></div></div>
+    <div class="meta" id="modLabel">Module 1 of 5</div>
+
+    <h2 id="title">Title</h2>
+    <div class="goals" id="goals" aria-label="Module goals"></div>
+
+    <div class="content" id="content"></div>
+
+    <div class="quiz" id="quiz" aria-live="polite"></div>
+
+    <div class="footer">
+      <div class="left">
+        <button id="resetBtn" title="Clear progress and start over">Start Over</button>
+      </div>
+      <div class="right" style="display:flex; gap:8px; flex-wrap:wrap">
+        <button id="backBtn">Back</button>
+        <button id="checkBtn">Check</button>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+    </div>
+
+    <div class="disclaimer" role="note" aria-label="Disclaimer and red flags">
+      <strong>Friendly disclaimer.</strong> This mini-course is educational and not medical advice.
+      Please contact your clinician about symptoms, medications, or supplements.
+      <br /><strong>Seek care urgently</strong> for: severe or worsening abdominal pain, blood in stool or black tarry stools,
+      unintentional weight loss, fever, persistent vomiting, dehydration, or pain with fever.
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Content (≤140 words body per module) ---------- */
+const modules = [
+  {
+    id:"intro",
+    title:"Introduction",
+    goals:[
+      "What “gut health” means",
+      "Why it affects mood & energy",
+      "How this mini-course works"
+    ],
+    content: [
+      {type:"text", html:`<p>Your gut isn’t just digestion—it’s a busy community that helps shape mood, energy, and metabolism.
+      In this five-step tour you’ll learn simple, safe ways to support it. We’ll keep things practical: brief ideas, tiny habits,
+      and quick checks to see what sticks. You’ll find gentle options that can fit most lifestyles, plus tips for those who
+      follow low-FODMAP. You don’t need special tests to start noticing patterns. Pick one small step each week and track
+      how you feel—sleep, bloat, regularity, and energy. If anything feels off, pause and talk with your clinician. Ready?
+      Let’s begin with the food basics that support your gut’s helpful microbes and steady your blood sugar.</p>`},
+      {type:"bullets", items:[
+        "Tiny steps beat big overhauls",
+        "Notice patterns, not perfection",
+        "Low-FODMAP? You still have options",
+        "Talk with your clinician when unsure"
+      ]},
+      {type:"callout", html:`<strong>Heads-up:</strong> Education only; not a diagnosis or treatment.`}
+    ],
+    quiz:{
+      prompt:"Which best describes gut health?",
+      options:[
+        {id:"a", text:"Just digestion, nothing else"},
+        {id:"b", text:"A system linking digestion, immunity, hormones, and the brain", correct:true},
+        {id:"c", text:"Only taking probiotics"}
+      ],
+      feedback:{
+        correct:"Yes. The gut connects to immunity, hormones, and the brain.",
+        incorrect:"Think bigger than digestion alone—many systems interact."
+      }
+    }
+  },
+  {
+    id:"foundations",
+    title:"Foundations of Nutrition",
+    goals:[
+      "Balanced plate pattern",
+      "Hydration basics",
+      "Fiber & plants for microbes"
+    ],
+    content:[
+      {type:"text", html:`<p>Think “balanced plate”: protein, colorful plants, quality fats, and slow-burn carbs.
+      This steadies blood sugar and feeds helpful microbes. Aim for palm-size protein, two cups of non-starchy veg,
+      and a thumb of healthy fat most meals. Choose slow carbs like oats, quinoa, or sweet potato. Sip water through
+      the day. <em>Low-FODMAP?</em> You can follow the same pattern using tolerated foods (e.g., rice, firm bananas,
+      carrots, spinach, eggs, chicken, olive oil). Start with what you already like and build from there. Small,
+      repeatable choices help your gut more than short bursts of perfection.</p>`},
+      {type:"bullets", items:[
+        "Protein 1–2 palm-sizes/meal",
+        "2+ cups colorful veg",
+        "Healthy fats: olive oil, avocado, nuts",
+        "Slow carbs: oats, rice, quinoa, sweet potato",
+        "Hydrate: steady sips daily"
+      ]},
+      {type:"callout", html:`Low-FODMAP note: swap to tolerated fruits/veg and grains; keep the same plate structure.`}
+    ],
+    quiz:{
+      prompt:"Which plate best supports your microbiome?",
+      options:[
+        {id:"a", text:"Mostly ultra-processed snacks"},
+        {id:"b", text:"Protein, colorful plants, healthy fats, slow carbs", correct:true},
+        {id:"c", text:"Only fruit smoothies"}
+      ],
+      feedback:{correct:"Exactly—balanced variety feeds helpful microbes.", incorrect:"Try the balanced plate approach."}
+    }
+  },
+  {
+    id:"dynamics",
+    title:"Common Dysfunction Dynamics",
+    goals:[
+      "Dysbiosis basics",
+      "Acid vs. reflux myths",
+      "Motility & stress link"
+    ],
+    content:[
+      {type:"text", html:`<p>Gut symptoms often overlap. Gas, bloat, or reflux aren’t always “too much acid”—sometimes
+      it’s timing, triggers, or slow motility. Stress, poor sleep, low movement, antibiotics, and low fiber can
+      shift the microbiome and rhythm of the gut. Track when symptoms happen (during meals, two hours after, or at night),
+      and what helps or worsens. This pattern can guide your next step with a clinician. If you follow low-FODMAP,
+      use your tolerated list while you experiment with timing and meal size.</p>`},
+      {type:"bullets", items:[
+        "Symptoms = pattern clues",
+        "Stress & sleep affect motility",
+        "Antibiotics and diet shift microbes",
+        "Reflux ≠ always high acid"
+      ]}
+    ],
+    quiz:{
+      prompt:"Which factor can slow gut motility?",
+      options:[
+        {id:"a", text:"Stress and poor sleep", correct:true},
+        {id:"b", text:"Shoe size"},
+        {id:"c", text:"Eye color"}
+      ],
+      feedback:{correct:"Right—stress and sleep play big roles.", incorrect:"Look at lifestyle factors like stress/sleep."}
+    }
+  },
+  {
+    id:"home",
+    title:"Simple At-Home Interventions",
+    goals:[
+      "Meal rhythm",
+      "Walks + breathwork",
+      "Gentle trials"
+    ],
+    content:[
+      {type:"text", html:`<p>Start with rhythm: aim for regular meals and a comfortable overnight fast (often ~12 hours
+      unless advised otherwise). A 10–15 minute walk after meals can ease bloat and smooth glucose. Try 5 minutes of
+      diaphragmatic breathing morning and night to calm the gut–brain loop. Keep a brief log for 10–14 days to spot
+      triggers and wins. Low-FODMAP folks can test one change at a time while staying within tolerated foods.</p>`},
+      {type:"bullets", items:[
+        "Regular meal windows; gentle overnight fast",
+        "10–15 min walk after meals",
+        "5 min diaphragmatic breathing (AM/PM)",
+        "Simple food–symptom log for 10–14 days"
+      ]},
+      {type:"callout", html:`<strong>Stop and call your clinician</strong> for severe pain, bleeding, fever, ongoing vomiting, or weight loss.`}
+    ],
+    quiz:{
+      prompt:"Which habit most directly supports post-meal glucose and motility?",
+      options:[
+        {id:"a", text:"Scrolling social media"},
+        {id:"b", text:"A 10–15 minute walk", correct:true},
+        {id:"c", text:"Skipping water all day"}
+      ],
+      feedback:{correct:"Yes—short walks help a lot.", incorrect:"Try brief post-meal walks."}
+    }
+  },
+  {
+    id:"wrap",
+    title:"Wrap-Up",
+    goals:[
+      "Review wins",
+      "Pick one next step",
+      "Know when to seek care"
+    ],
+    content:[
+      {type:"text", html:`<p>Nice work. Choose <strong>one</strong> tiny step for the next 7 days and track what you notice:
+      bloat, regularity, energy, and mood. Consistency beats intensity. If symptoms worry you, pause and talk with your
+      clinician. Your gut changes with daily patterns—food, movement, stress care, and sleep. Keep what helps; drop what
+      doesn’t. You’re running your own n=1 experiment.</p>`}
+    ],
+    survey:{
+      prompt:"Pick your next step:",
+      options:[
+        "Balance my plate at dinner",
+        "Walk 10 minutes after lunch",
+        "Drink water consistently",
+        "5 minutes of breathing twice daily"
+      ]
+    }
+  }
+];
+
+/* ---------- State & Persistence ---------- */
+let state = {
+  idx: 0,
+  selected: null,
+  answered: false,
+  score: 0
+};
+
+const LS = {
+  get(){ try { return JSON.parse(localStorage.getItem("fv_gut_state")) || null } catch{ return null } },
+  set(s){ localStorage.setItem("fv_gut_state", JSON.stringify(s)) },
+  clear(){ localStorage.removeItem("fv_gut_state") },
+  setNextStep(step){ localStorage.setItem("fv_gut_nextstep", step || "") },
+  getNextStep(){ return localStorage.getItem("fv_gut_nextstep") || "" }
+};
+
+function load(){
+  const saved = LS.get();
+  if(saved && Number.isInteger(saved.idx) && Number.isInteger(saved.score)){
+    state.idx = Math.max(0, Math.min(modules.length-1, saved.idx));
+    state.score = Math.max(0, Math.min(4, saved.score));
+  }
+}
+function save(){ LS.set({idx: state.idx, score: state.score}) }
+
+/* ---------- Rendering ---------- */
+const el = sel => document.querySelector(sel);
+const modLabel = el("#modLabel");
+const scoreLabel = el("#scoreLabel");
+const title = el("#title");
+const goals = el("#goals");
+const content = el("#content");
+const quiz = el("#quiz");
+const bar = el("#bar");
+const backBtn = el("#backBtn");
+const nextBtn = el("#nextBtn");
+const checkBtn = el("#checkBtn");
+const resetBtn = el("#resetBtn");
+
+function render(){
+  const m = modules[state.idx];
+  const total = modules.length;
+  modLabel.textContent = `Module ${state.idx+1} of ${total}`;
+  scoreLabel.textContent = `Score: ${state.score} / 4`;
+  title.textContent = m.title;
+
+  // progress bar
+  const pct = Math.round(((state.idx+1)/total)*100);
+  bar.style.width = pct + "%";
+
+  // goals
+  goals.innerHTML = "";
+  (m.goals||[]).forEach(g=>{
+    const c = document.createElement("span");
+    c.className="chip";
+    c.textContent=g;
+    goals.appendChild(c);
+  });
+
+  // content
+  content.innerHTML="";
+  (m.content||[]).forEach(block=>{
+    if(block.type==="text"){
+      const p = document.createElement("div");
+      p.innerHTML = block.html;
+      content.appendChild(p);
+    } else if(block.type==="bullets"){
+      const ul = document.createElement("ul");
+      ul.className="bullets";
+      block.items.forEach(i=>{
+        const li=document.createElement("li"); li.textContent=i; ul.appendChild(li);
+      });
+      content.appendChild(ul);
+    } else if(block.type==="callout"){
+      const d = document.createElement("div");
+      d.className="callout";
+      d.innerHTML=block.html;
+      content.appendChild(d);
+    }
+  });
+
+  // quiz / survey
+  quiz.innerHTML="";
+  state.selected=null; state.answered=false;
+  if(m.quiz){
+    const h = document.createElement("h3"); h.textContent="Quick check"; quiz.appendChild(h);
+    const prompt = document.createElement("div"); prompt.className="small"; prompt.textContent=m.quiz.prompt; quiz.appendChild(prompt);
+
+    const group = document.createElement("div");
+    group.className="options";
+    group.setAttribute("role","radiogroup");
+    group.setAttribute("aria-label","Quiz options");
+    m.quiz.options.forEach(o=>{
+      const opt=document.createElement("div");
+      opt.className="opt";
+      opt.setAttribute("role","radio");
+      opt.setAttribute("tabindex","0");
+      opt.setAttribute("aria-checked","false");
+      opt.dataset.id=o.id;
+      opt.innerHTML=`<span class="bullet" aria-hidden="true"></span><span>${o.text}</span>`;
+      opt.addEventListener("click", ()=>selectOption(o.id, group, m.quiz.options));
+      opt.addEventListener("keydown", e=>{
+        if(e.key===" "||e.key==="Enter"){ e.preventDefault(); selectOption(o.id, group, m.quiz.options); }
+        if(e.key==="ArrowDown"||e.key==="ArrowRight"){ e.preventDefault(); focusSibling(opt, group, 1) }
+        if(e.key==="ArrowUp"||e.key==="ArrowLeft"){ e.preventDefault(); focusSibling(opt, group, -1) }
+      });
+      group.appendChild(opt);
+    });
+    quiz.appendChild(group);
+    const fb = document.createElement("div"); fb.className="feedback"; fb.id="fb"; quiz.appendChild(fb);
+    checkBtn.style.display="";
+  } else if (m.survey){
+    const label = document.createElement("div");
+    label.className="small"; label.textContent=m.survey.prompt; quiz.appendChild(label);
+    const row = document.createElement("div"); row.className="goals"; quiz.appendChild(row);
+    const saved = LS.getNextStep();
+    m.survey.options.forEach(txt=>{
+      const c=document.createElement("button");
+      c.className="chip"; c.type="button"; c.setAttribute("aria-pressed", saved===txt ? "true":"false");
+      if(saved===txt){ c.style.outline="3px solid color-mix(in srgb, var(--accent) 55%, transparent)"; }
+      c.textContent=txt;
+      c.addEventListener("click", ()=>{
+        LS.setNextStep(txt);
+        render(); // reflect selection
+      });
+      row.appendChild(c);
+    });
+    // show summary score
+    const summary=document.createElement("div");
+    summary.className="callout";
+    summary.innerHTML=`<strong>Nice!</strong> You completed all modules. Your quiz score: <strong>${state.score}/4</strong>.
+    Selected next step: <em>${LS.getNextStep()||"None yet"}</em>.`;
+    quiz.appendChild(summary);
+    checkBtn.style.display="none";
+  }
+
+  // buttons
+  backBtn.disabled = state.idx===0;
+  nextBtn.textContent = (state.idx===modules.length-1) ? "Finish" : "Next";
+  checkBtn.disabled = true;
+
+  save();
+}
+
+function focusSibling(opt, group, dir){
+  const opts = [...group.querySelectorAll(".opt")];
+  const i = opts.indexOf(opt);
+  const j = Math.max(0, Math.min(opts.length-1, i+dir));
+  opts[j].focus();
+}
+
+function selectOption(id, group, options){
+  if(state.answered) return;
+  state.selected = id;
+  [...group.querySelectorAll(".opt")].forEach(o=>{
+    o.setAttribute("aria-checked", o.dataset.id===id ? "true":"false");
+  });
+  checkBtn.disabled = false;
+}
+
+function checkAnswer(){
+  const m = modules[state.idx];
+  if(!m.quiz || state.answered || !state.selected) return;
+  const correct = (m.quiz.options.find(o=>o.correct)||{}).id;
+  const options = [...document.querySelectorAll(".opt")];
+  options.forEach(o=>{
+    const id = o.dataset.id;
+    if(id===correct){ o.classList.add("correct") }
+    if(id===state.selected && id!==correct){ o.classList.add("incorrect") }
+  });
+  const fb = document.getElementById("fb");
+  fb.textContent = (state.selected===correct) ? m.quiz.feedback.correct : m.quiz.feedback.incorrect;
+  if(state.selected===correct) state.score = Math.min(4, state.score+1);
+  state.answered = true;
+  checkBtn.disabled = true;
+  scoreLabel.textContent = `Score: ${state.score} / 4`;
+  save();
+}
+
+function next(){
+  if(state.idx < modules.length-1){
+    state.idx++;
+    render();
+  } else {
+    // finished: reset to intro but keep score? Better to offer restart:
+    alert("Course complete! You can pick a next step and start over anytime.");
+  }
+}
+function back(){
+  if(state.idx>0){ state.idx--; render(); }
+}
+function resetAll(){
+  if(confirm("Clear your progress and start over?")){
+    state = {idx:0, selected:null, answered:false, score:0};
+    LS.clear(); LS.setNextStep("");
+    render();
+  }
+}
+
+/* ---------- Events ---------- */
+backBtn.addEventListener("click", back);
+nextBtn.addEventListener("click", next);
+checkBtn.addEventListener("click", checkAnswer);
+resetBtn.addEventListener("click", resetAll);
+
+/* ---------- Init ---------- */
+load();
+render();
+</script>
+</body>
+</html>
