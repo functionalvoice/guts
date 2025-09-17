@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gut Health Learning Widget</title>
+  <style>
+    :root{
+      --fg:#0f172a; /* slate-900 */
+      --muted:#475569; /* slate-600 */
+      --bg:#ffffff;
+      --accent:#0ea5e9; /* sky-500 */
+      --accent-2:#14b8a6; /* teal-500 */
+      --surface:#f1f5f9; /* slate-100 */
+      --ok:#16a34a;/* green-600 */
+      --warn:#dc2626;/* red-600 */
+      --radius:16px;
+    }
+    *{box-sizing:border-box;font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"}
+    .gh-card{background:var(--bg); border:1px solid #e2e8f0; border-radius:var(--radius); padding:20px; box-shadow:0 10px 15px rgba(2,6,23,0.05)}
+    .gh-h1{font-size:22px; font-weight:800; color:var(--fg); margin:0 0 8px}
+    .gh-h2{font-size:18px; font-weight:700; color:var(--fg); margin:16px 0 8px}
+    .gh-p{color:var(--muted); line-height:1.6;}
+    .gh-btn{appearance:none; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700}
+    .gh-btn-primary{background:var(--accent); color:white}
+    .gh-btn-outline{background:transparent; border:1px solid #cbd5e1; color:var(--fg)}
+    .gh-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .gh-chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; background:var(--surface); border-radius:999px; font-size:12px; color:var(--muted)}
+    .gh-progress{height:10px; background:#e2e8f0; border-radius:999px; overflow:hidden}
+    .gh-progress > div{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0%}
+    .gh-quiz{display:grid; gap:8px}
+    .gh-opt{border:1px solid #e2e8f0; border-radius:12px; padding:10px; cursor:pointer}
+    .gh-opt[aria-checked="true"]{border-color:var(--accent)}
+    .gh-opt.correct{border-color:var(--ok); background:rgba(22,163,74,.06)}
+    .gh-opt.incorrect{border-color:var(--warn); background:rgba(220,38,38,.06)}
+    .gh-footer{display:flex; justify-content:space-between; gap:10px; margin-top:16px}
+    .gh-small{font-size:12px; color:#64748b}
+    .gh-list{padding-left:18px}
+    .gh-badge{font-size:11px; font-weight:700; color:white; background:var(--accent); padding:3px 8px; border-radius:999px}
+    .gh-divider{height:1px; background:#e2e8f0; margin:14px 0}
+    .gh-callout{background:#ecfeff; border:1px solid #bae6fd; padding:12px; border-radius:12px}
+    .gh-hidden{display:none}
+  </style>
+</head>
+<body>
+  <!-- Usage: place <gut-learning> anywhere, set data-config to an ID of a global JSON object (or leave empty to use defaultConfig below). -->
+  <gut-learning data-config="defaultConfig"></gut-learning>
+
+  <script>
+  // 1) CONTENT SCHEMA — You can generate this JSON with AI from your own prompts.
+  //    Replace defaultConfig with your customized modules.
+  window.defaultConfig = {
+    brand: { name: "The Functional Voice", accent: "#0ea5e9" },
+    modules: [
+      {
+        id: "intro",
+        title: "Introduction",
+        goals: [
+          "Define 'gut health' in plain language",
+          "Explain why it matters for mood, energy, and metabolism",
+          "Set expectations for simple, safe self‑care"
+        ],
+        content: [
+          { type: "text", html: "<p>Welcome! This micro‑course gives you a clean, practical tour of gut basics and what you can do at home.</p>" },
+          { type: "bullets", items: ["What ‘gut health’ means","How your gut talks to your brain","What we’ll cover and how to practice"] },
+          { type: "callout", html: "<strong>Heads‑up:</strong> This is not medical advice. Ask your clinician about any symptoms, meds, or supplements."}
+        ],
+        quiz: {
+          prompt: "Which statement best describes gut health?",
+          options: [
+            { id: "a", text: "Only digestion and nothing else" },
+            { id: "b", text: "A system involving digestion, immunity, hormones, and the brain", correct: true },
+            { id: "c", text: "Just probiotics" }
+          ],
+          feedback: {
+            correct: "Yes — the gut connects to immunity, hormones, and the brain.",
+            incorrect: "Not quite. Think beyond digestion alone."
+          }
+        }
+      },
+      {
+        id: "foundations",
+        title: "Foundations of Nutrition",
+        goals: ["Build a balanced plate","Hydrate strategically","Support the microbiome with plants"],
+        content: [
+          { type: "text", html: "<p>Start simple: protein, colorful plants, quality fats, and smart carbs. Build most meals from these anchors.</p>" },
+          { type: "bullets", items: ["Protein palm‑size 1–2×/meal","2+ cups non‑starchy veg","Olive oil/avocado/nuts","Slow carbs: quinoa, oats, sweet potato","Hydrate: ~1/2 body‑weight (lb) in oz/day, unless told otherwise"] },
+          { type: "callout", html: "<em>Low‑FODMAP?</em> You can still follow the same pattern with tolerated foods."}
+        ],
+        quiz: {
+          prompt: "Which plate pattern best supports gut microbes?",
+          options: [
+            { id: "a", text: "Mostly ultra‑processed snacks" },
+            { id: "b", text: "Protein, colorful plants, healthy fats, slow carbs", correct: true },
+            { id: "c", text: "Only fruit smoothies" }
+          ],
+          feedback: { correct: "Exactly.", incorrect: "Try the balanced plate pattern." }
+        }
+      },
+      {
+        id: "dynamics",
+        title: "Common Dysfunction Dynamics",
+        goals: ["Dysbiosis basics","Low stomach acid vs. reflux","Motility and the gut–brain axis"],
+        content: [
+          { type: "text", html: "<p>Symptoms can overlap. Patterns (timing, triggers, response to foods) help guide next steps with your clinician.</p>" },
+          { type: "bullets", items: ["Gas/bloat ≠ always ‘too much acid’","Stress can slow motility","Antibiotics/sleep/diet shift the microbiome"] }
+        ],
+        quiz: {
+          prompt: "Which can influence motility?",
+          options: [
+            { id: "a", text: "Stress and sleep", correct: true },
+            { id: "b", text: "Shoe size" },
+            { id: "c", text: "Eye color" }
+          ],
+          feedback: { correct: "Right — stress and sleep matter.", incorrect: "Think lifestyle factors." }
+        }
+      },
+      {
+        id: "home",
+        title: "Simple At‑Home Interventions",
+        goals: ["Meal rhythm","Walks + breathwork","Gentle elimination trials"],
+        content: [
+          { type: "bullets", items: [
+            "Regular meal windows (12h overnight rest typical unless advised otherwise)",
+            "10‑15 min walk after meals 1–2×/day",
+            "Diaphragmatic breathing 5 min (AM/PM)",
+            "Track food → symptom patterns for 10–14 days"
+          ] },
+          { type: "callout", html: "<strong>Note:</strong> Stop and speak with your clinician for severe pain, weight loss, bleeding, fever, persistent vomiting, or medication changes."}
+        ],
+        quiz: {
+          prompt: "Which habit most directly helps post‑meal glucose and motility?",
+          options: [
+            { id: "a", text: "Scrolling social media" },
+            { id: "b", text: "A 10–15 minute walk", correct: true },
+            { id: "c", text: "Skipping water all day" }
+          ],
+          feedback: { correct: "Yes — short walks help a lot.", incorrect: "Try brief post‑meal walks." }
+        }
+      },
+      {
+        id: "wrap",
+        title: "Wrap‑Up",
+        goals: ["Review wins","Plan next tiny step","Know when to seek care"],
+        content: [
+          { type: "text", html: "<p>Pick <strong>one</strong> small change for the next 7 days. Track what you notice. That’s your n=1 lab.</p>" }
+        ],
+        survey: {
+          prompt: "Pick your next step:",
+          options: [
+            "Balance my plate at dinner",
+            "Walk 10 minutes after lunch",
+            "Drink water consistently",
+            "5 minutes of breathing twice daily"
+          ]
+        }
+      }
+    ]
+  };
+
+  // 2) THE WIDGET — Lightweight Web Component, no dependencies.
+  class GutLearning extends HTMLElement{
+    constructor(){
+      super();
+      this.attachShadow({mode:'open'});
+      this.state = { idx:0, selected:null, answered:false, score:0 };
+    }
+    connectedCallback(){
+      const key = this.getAttribute('data-config');
+      this.config = (key && window[key]) ? window[key] : window.defaultConfig;
+      if(this.config?.brand?.accent){
+        this.shadowRoot.adoptedStyleSheets = [];
+        const style = document.createElement('style');
+        style.textContent = `:host{--accent:${this.config.brand.accent}}`;
+        this.shadowRoot.append(style);
+      }
+      this.render();
+    }
+    get modules(){ return this.config.modules || []; }
+    get current(){ return this.modules[this.state.idx] }
+    setIdx(i){ this.state.idx = Math.max(0, Math.min(this.modules.length-1, i)); this.state.selected=null; this.state.answered=false; this.render(); }
+    percent(){ return Math.round(((this.state.idx) / (this.modules.length-1)) * 100); }
+
+    handleOption(id){ if(this.state.answered) return; this.state.selected=id; this.render(); }
+    submitQuiz(){
+      const quiz = this.current.quiz; if(!quiz) return;
+      this.state.answered = true;
+      const chosen = this.state.selected;
+      const opt = quiz.options.find(o=>o.id===chosen);
+      if(opt?.correct) this.state.score++;
+      this.render();
+    }
+
+    next(){ this.setIdx(this.state.idx + 1); }
+    back(){ this.setIdx(this.state.idx - 1); }
+
+    // Simple serializer for a CSV of results
+    exportResults(){
+      const rows = [
+        ["module","answer","correct"],
+      ];
+      this.modules.forEach(m=>{
+        if(m.quiz){
+          const selected = (m===this.current? this.state.selected : null) // only tracks current for demo
+          const correctId = (m.quiz.options.find(o=>o.correct)||{}).id || '';
+          rows.push([m.id, selected||'', selected===correctId?'yes':'no']);
+        }
+      });
+      const csv = rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'gut-learning-results.csv'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    render(){
+      const m = this.current; if(!m) return;
+      const total = this.modules.length;
+      const progress = Math.round(((this.state.idx+1)/total)*100);
+      const el = (strings,...vals)=>strings.map((s,i)=>s+(vals[i]??'')).join('');
+
+      const contentHTML = (m.content||[]).map(block=>{
+        if(block.type==='text') return `<div class="gh-p">${block.html}</div>`;
+        if(block.type==='bullets') return `<ul class="gh-list">${block.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+        if(block.type==='callout') return `<div class="gh-callout">${block.html}</div>`;
+        return '';
+      }).join('');
+
+      const quiz = m.quiz ? el`
+        <div class="gh-h2">Quick check</div>
+        <div class="gh-quiz" role="radiogroup" aria-label="quiz">
+          ${m.quiz.options.map(o=>{
+            const isSel = this.state.selected===o.id;
+            const classes = ['gh-opt'];
+            if(this.state.answered){
+              classes.push(o.correct?'correct': (isSel?'incorrect':''));
+            }
+            return `<div class="${classes.join(' ')}" tabindex="0" role="radio" aria-checked="${isSel}" data-id="${o.id}">${o.text}</div>`
+          }).join('')}
+        </div>
+        ${this.state.answered ? `<div class="gh-small">${(m.quiz.options.find(o=>o.id===this.state.selected)?.correct)?m.quiz.feedback.correct:m.quiz.feedback.incorrect}</div>`: ''}
+      `: '';
+
+      const survey = m.survey ? el`
+        <div class="gh-h2">${m.survey.prompt}</div>
+        <div class="gh-row">
+          ${m.survey.options.map(txt=>`<span class="gh-chip">${txt}</span>`).join('')}
+        </div>
+      `: '';
+
+      this.shadowRoot.innerHTML = el`
+        <div class="gh-card" part="card" aria-live="polite">
+          <div class="gh-row" style="justify-content:space-between; align-items:center;">
+            <div class="gh-row">
+              <span class="gh-badge">${this.config.brand?.name||'Learning'}</span>
+              <span class="gh-small">Module ${this.state.idx+1} of ${total}</span>
+            </div>
+            <div class="gh-small">Score: ${this.state.score}</div>
+          </div>
+
+          <div class="gh-h1">${m.title}</div>
+          <div class="gh-p">Goals:</div>
+          <div class="gh-row" style="margin-bottom:8px">${(m.goals||[]).map(g=>`<span class="gh-chip">${g}</span>`).join('')}</div>
+
+          <div class="gh-progress" aria-label="progress"><div style="width:${progress}%"></div></div>
+
+          <div class="gh-divider"></div>
+
+          ${contentHTML}
+          ${quiz}
+          ${survey}
+
+          <div class="gh-footer">
+            <button class="gh-btn gh-btn-outline" data-act="back" ${this.state.idx===0?'disabled':''}>Back</button>
+            <div class="gh-row">
+              ${m.quiz && !this.state.answered ? `<button class="gh-btn gh-btn-outline" data-act="submit" ${this.state.selected? '' : 'disabled'}>Check</button>`: ''}
+              ${m.quiz && this.state.answered ? `<button class="gh-btn gh-btn-outline" data-act="export">Export CSV</button>`: ''}
+              <button class="gh-btn gh-btn-primary" data-act="next">${this.state.idx===total-1?'Finish':'Next'}</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // wire events
+      this.shadowRoot.querySelectorAll('.gh-opt').forEach(el=>{
+        el.addEventListener('click',()=>this.handleOption(el.getAttribute('data-id')));
+        el.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); this.handleOption(el.getAttribute('data-id')); }});
+      });
+      const backBtn = this.shadowRoot.querySelector('[data-act="back"]');
+      if(backBtn) backBtn.addEventListener('click',()=>this.back());
+      const nextBtn = this.shadowRoot.querySelector('[data-act="next"]');
+      if(nextBtn) nextBtn.addEventListener('click',()=>this.next());
+      const submitBtn = this.shadowRoot.querySelector('[data-act="submit"]');
+      if(submitBtn) submitBtn.addEventListener('click',()=>this.submitQuiz());
+      const exportBtn = this.shadowRoot.querySelector('[data-act="export"]');
+      if(exportBtn) exportBtn.addEventListener('click',()=>this.exportResults());
+    }
+  }
+  customElements.define('gut-learning', GutLearning);
+  </script>
+</body>
+</html>
