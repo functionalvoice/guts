@@ -3,9 +3,9 @@
 This project, **Functional Voice Guts**, is designed to provide simple yet effective learning system to educate individuals on basic functional medicine tenets as they apply to the Gastrointestinal system. 
 
 ## Features
-- Easy integration with various voice recognition APIs
-- Modular architecture for scalable development
-- Support for multiple languages
+- Easy access to pertinent education 
+- Modular learning platform
+- Ends with a simple learning assessment 
 
 ## Getting Started
 To get started with the project, clone the repository and install the necessary dependencies:
